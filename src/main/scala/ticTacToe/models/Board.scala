@@ -81,77 +81,31 @@ class Board(board: List[List[Int]] = List(
   def isComplete: Boolean = this.getFree().length==3
 
   def isTicTacToe: Boolean = {
-    def checkHorizontal(board: List[List[Int]]): Boolean={
-      board match {
-        case Nil => false
-        case head::tail => equalList(head) || checkHorizontal(tail)
+
+    def isTicTacToe(player: Int): Boolean = {
+
+      def equals(strings: List[String]): Boolean =
+        strings match {
+          case Nil => true
+          case _ :: Nil => true
+          case first :: second :: tail if (first == second) => equals(second :: tail)
+          case _ :: _ => false
+        }
+
+      def getDirections(coordinates: List[Coordinate]): List[String] = {
+        coordinates match {
+          case Nil => Nil
+          case head :: Nil => Nil
+          case first :: second :: tail => first.getDirection(second) :: getDirections(second :: tail)
+        }
       }
+
+      val coordinates = this.getCoordinates(player)
+      val directions = getDirections(coordinates)
+      coordinates.length == 3 && equals(directions) && !directions.contains("")
     }
 
-    def checkVertical(board: List[List[Int]]): Boolean = {
-      board match {
-        case Nil => false
-        case _ if (board.head.isEmpty) =>  false
-        case _ => equalList(getHeads(board)) || checkVertical(getTails(board))
-      }
-    }
-
-    def checkDiagonal(board: List[List[Int]], player: Int = -2): Boolean = {
-      (board, player) match {
-        case (Nil,_) => true
-        case (_,-2) => checkDiagonal(getTails(board).tail, board.head.head)
-        case (_,-1) => false
-        case (_,_) => if (player==board.head.head)
-          checkDiagonal(getTails(board.tail), board.head.head)
-        else
-          false
-      }
-    }
-    def checkInverseDiagonal(board: List[List[Int]]): Boolean = {
-      checkDiagonal(board.reverse)
-    }
-
-
-    def equalList(list: List[Int]): Boolean = {
-      list match {
-        case Nil => true
-        case -1 :: _ => false
-        case head :: Nil => true
-        case head :: tail => if (head == tail.head) {
-          equalList(tail) && true}
-        else
-          false
-      }
-    }
-
-    def getHeads(board: List[List[Int]]): List[Int] ={
-      var bor = board
-      board match {
-        case Nil => Nil
-        case head :: Nil => head.head::Nil
-        case head :: tail =>
-          if (board.head.isEmpty) Nil
-          else head.head :: getHeads(board.tail)
-      }
-    }
-
-    def getTails(board: List[List[Int]]): List[List[Int]] ={
-      board match {
-        case Nil => Nil
-        case head :: tail => head.tail :: getTails(tail)
-      }
-    }
-
-    def invertRows(list: List[List[Int]]): List[List[Int]] = {
-      board match {
-        case Nil => Nil
-        case head :: Nil =>  board
-        case head :: tail => head :: invertRows(tail)
-      }
-    }
-
-    checkHorizontal(board_) || checkVertical(board_) || checkDiagonal(board_) || checkInverseDiagonal(board_)
-
+    isTicTacToe(0) || isTicTacToe(1)
   }
 
   override def equals(that: Any): Boolean =

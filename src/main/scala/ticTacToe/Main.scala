@@ -20,7 +20,7 @@ object Main {
         }
         GameView.write(game)
       } while (!game.isTicTacToe)
-      GestorIO.write("... pero has perdido\n")
+      GestorIO.write("... you loose\n")
     } while (GameView.tryAgain())
   }
 }

@@ -10,7 +10,7 @@ object GameView {
   }
 
   def writeMode():CoordinateView = {
-    val mode = GestorIO.readString("Modo? [play-demo]")
+    val mode = GestorIO.readString("Mode? [play-demo]")
     if (mode=="play"){
       new HumanView()
     } else if(mode=="demo"){
