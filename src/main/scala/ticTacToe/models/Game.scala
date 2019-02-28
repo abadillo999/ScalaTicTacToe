@@ -20,13 +20,15 @@ class Game(turn: Turn = new Turn, board: Board = new Board()) {
 
   def isTicTacToe: Boolean = board_.isTicTacToe
 
-  def getChecked(): List[Coordinate] = board_.getCoordinates(turn_.take)
+  def getChecked: List[Coordinate] = board_.getCoordinates(turn_.take)
 
-  def getFree(): List[Coordinate] = board_.getFree()
+  def getFree: List[Coordinate] = board_.getFree()
+
+  def getTurn: Int = turn_.take
+
+  def getBoard: Board = board_
 
   def isComplete: Boolean = board_.isComplete
-
-  def getColor(coordinate:Coordinate):Int = board_.getColor(coordinate)
 
   def take : Int = turn_.take
 

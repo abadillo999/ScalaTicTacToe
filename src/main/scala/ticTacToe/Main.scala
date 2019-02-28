@@ -1,26 +1,28 @@
 package ticTacToe
 
 import ticTacToe.models.Game
-import ticTacToe.views.{GameView, CoordinateView, GestorIO}
+import ticTacToe.controllers.ViewController
+import ticTacToe.views.{GestorIO, HumanView}
+import akka.actor.{Actor, ActorRef, ActorSystem, Props, Terminated}
+
 
 object Main {
 
 
   def main(args: Array[String]): Unit = {
-    do {
-      var game = new Game
-      val coordinateView = GameView.writeMode()
-      GameView.write(game)
-      do {
-        if (!game.isComplete) {
-          game = game.put(coordinateView.read(game.getFree()))
-        } else {
+    val system = ActorSystem("system")
+    val player = system.actorOf(Props[HumanView], name = "player1")
+    val controller = system.actorOf(Props(new ViewController(player)))
+    system.actorOf(Props(classOf[Terminator], controller), "terminator")
 
-          game = game.move(coordinateView.read(game.getChecked()), coordinateView.read(game.getFree()))
-        }
-        GameView.write(game)
-      } while (!game.isTicTacToe)
-      GestorIO.write("... you loose\n")
-    } while (GameView.tryAgain())
+  }
+
+
+  class Terminator(ref: ActorRef) extends Actor {
+    context watch ref
+    def receive = {
+      case Terminated(_) =>
+        context.system.terminate()
+    }
   }
 }
