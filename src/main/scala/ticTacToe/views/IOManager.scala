@@ -1,6 +1,6 @@
 package ticTacToe.views
 
-object GestorIO {
+object IOManager {
 
   def readString(title:String):String = {
     print(s"$title: ")

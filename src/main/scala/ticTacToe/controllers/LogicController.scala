@@ -24,25 +24,20 @@ class LogicController(playerList: List[ActorRef],game: Game) extends Actor{
     playerList_.foreach(_ ! ShowBoard(game_.getBoard))
     if (!game_.isTicTacToe){
       if (!game_.isComplete) {
-        GestorIO.write(game_.getTurn)
         playerList_(game_.getTurn) ! TurnToPut(game_.getFree)
       } else {
         playerList_(game_.getTurn) ! TurnToMove(game_.getChecked, game_.getFree)
       }
     } else {
-      //this.notifyResult(playerList_)
+      this.notifyResult
+      playerList_.foreach(player =>
+        if (player.path.name!="mainPlayer")
+          player ! StopMessage)
       context.stop(self)
     }
   }
-  def notifyResult(list: List[ActorRef]):Any= {
-    list.zipWithIndex match {
-      case Nil => Nil
-      case (player, position) :: _ if position == game_.getTurn =>
-        player ! LooseMessage
-        notifyResult(list.tail)
-      case (player, _) :: _ =>
-        player ! WinMessage
-        notifyResult(list.tail)
-    }
+  def notifyResult= {
+    playerList_(game_.getTurn) ! LooseMessage
+    playerList_((game_.getTurn + 1) % 2) ! WinMessage
   }
 }

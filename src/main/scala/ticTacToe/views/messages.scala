@@ -5,6 +5,8 @@ import ticTacToe.models.{Board, Coordinate}
 case class PutCoordinate(coordinate: Coordinate)
 case class MoveCoordinate(origin: Coordinate, destination: Coordinate)
 
+case object StopMessage
+
 //Controller to players
 case object StartMessage
 case object RetryMessage
@@ -16,8 +18,6 @@ case class TurnToMove(origins: List[Coordinate], destinations: List[Coordinate])
 
 case object LooseMessage
 case object WinMessage
-
-case object StopMessage
 
 // Game modes
 sealed trait GameMode

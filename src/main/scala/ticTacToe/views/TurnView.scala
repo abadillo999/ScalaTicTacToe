@@ -6,7 +6,7 @@ object TurnView {
 
   def write(game: Game) = {
     val color = ColorView.getChar(game.take)
-    GestorIO.write(s"Is the turn of $color\n")
+    IOManager.write(s"Is the turn of $color\n")
   }
 
 }
